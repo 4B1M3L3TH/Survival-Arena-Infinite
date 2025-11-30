@@ -779,6 +779,7 @@ window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
 const joystick = { active: false, x: 0, y: 0 };
 const joyZone = document.getElementById('joystick-zone');
 let jOrigin = { x: 0, y: 0 };
+let joyCursorPos = { x: 0, y: 0 }; // Posición del cursor visual
 
 joyZone.addEventListener('touchstart', e => {
     e.preventDefault();
@@ -797,9 +798,32 @@ joyZone.addEventListener('touchmove', e => {
     const angle = Math.atan2(dy, dx);
     joystick.x = Math.cos(angle);
     joystick.y = Math.sin(angle);
+    
+    // Actualizar posición visual del cursor del joystick
+    joyCursorPos.x = Math.cos(angle) * dist;
+    joyCursorPos.y = Math.sin(angle) * dist;
+    
+    // Mover el cursor (::before) del joystick
+    if (joyZone) {
+        joyZone.style.setProperty('--joy-x', `${joyCursorPos.x}px`);
+        joyZone.style.setProperty('--joy-y', `${joyCursorPos.y}px`);
+    }
 }, { passive: false });
 
-const endJoy = (e) => { e.preventDefault(); joystick.active = false; joystick.x = 0; joystick.y = 0; };
+const endJoy = (e) => { 
+    e.preventDefault(); 
+    joystick.active = false; 
+    joystick.x = 0; 
+    joystick.y = 0;
+    joyCursorPos.x = 0;
+    joyCursorPos.y = 0;
+    
+    // Resetear posición visual
+    if (joyZone) {
+        joyZone.style.setProperty('--joy-x', '0px');
+        joyZone.style.setProperty('--joy-y', '0px');
+    }
+};
 joyZone.addEventListener('touchend', endJoy);
 joyZone.addEventListener('touchcancel', endJoy);
 
