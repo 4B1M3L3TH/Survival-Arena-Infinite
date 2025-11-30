@@ -423,6 +423,15 @@ class Weapon {
     }
 }
 
+const ENEMIES_DB = {
+    worm: { hp: 12, damage: 5, speed: 2.2, value: 1, emoji: '🐛', ai: 'chase' },
+    beetle: { hp: 30, damage: 10, speed: 1.5, value: 2, emoji: '🐞', ai: 'chase' },
+    bat: { hp: 10, damage: 15, speed: 3.5, value: 3, emoji: '🦇', ai: 'chase' },
+    spider: { hp: 20, damage: 8, speed: 1.8, value: 2, emoji: '🕷️', ai: 'shooter' },
+    ogre: { hp: 50, damage: 25, speed: 1.2, value: 5, emoji: '👹', ai: 'chase' },
+    alien: { hp: 70, damage: 40, speed: 2.5, value: 4, emoji: '👾', ai: 'shooter' }
+};
+
 const WEAPONS_DB = {
     pistol: {
         name: "Pistola", baseCd: 35, baseDmg: 15, range: 350, icon: '🔫',
@@ -551,21 +560,20 @@ const game = {
         const rate = Math.max(5, 60 - (this.wave * 3) - (spawnAggro * this.wave * 0.5));
 
         if (this.frame % Math.floor(rate) === 0) {
-            const types = [
-                { hp: 12, damage: 5, speed: 2.2, value: 1, emoji: '🐛', ai: 'chase' },
-                { hp: 30, damage: 10, speed: 1.5, value: 2, emoji: '🐞', ai: 'chase' },
-                { hp: 10, damage: 15, speed: 3.5, value: 3, emoji: '🦇', ai: 'chase' },
-                { hp: 20, damage: 8, speed: 1.8, value: 2, emoji: '🕷️', ai: 'shooter' },
-                { hp: 50, damage: 25, speed: 1.2, value: 5, emoji: '👹', ai: 'chase' },
-                { hp: 70, damage: 40, speed: 2.5, value: 4, emoji: '👾', ai: 'shooter' }
-            ];
-            let t = types[0];
+            // Pool de enemigos disponibles en cada ola
+            const enemyPool = ['worm', 'beetle', 'bat', 'spider', 'ogre', 'alien'];
+            let selectedEnemy = 'worm';
             const r = Math.random();
-            if (this.wave > 2 && r > 0.7) t = types[1];
-            if (this.wave > 4) { if (r > 0.6) t = types[2]; else if (r > 0.85) t = types[3]; }
-            if (this.wave > 8 && r > 0.4) t = types[Math2.randInt(1, 3)];
+            
+            if (this.wave > 2 && r > 0.7) selectedEnemy = 'beetle';
+            if (this.wave > 4) { 
+                if (r > 0.6) selectedEnemy = 'bat'; 
+                else if (r > 0.85) selectedEnemy = 'spider'; 
+            }
+            if (this.wave > 8 && r > 0.4) selectedEnemy = enemyPool[Math2.randInt(1, 3)];
 
-            this.enemies.push(new Enemy(t, this.player.pos));
+            const enemyType = ENEMIES_DB[selectedEnemy];
+            this.enemies.push(new Enemy(enemyType, this.player.pos));
         }
 
         if (this.frame % 60 === 0) {
@@ -652,7 +660,7 @@ const game = {
             { txt: "+20 Vida Max", stat: 'maxHp', val: 20, icon: '❤️' },
             { txt: "+10% Velocidad", stat: 'speed', val: 0.5, icon: '👟' },
             { txt: "+2 Armadura", stat: 'armor', val: 2, icon: '🛡️' },
-            { txt: "+5% Robo Vida", stat: 'lifesteal', val: 5, icon: '🧛' }
+            { txt: "+2% Robo Vida", stat: 'lifesteal', val: 2, icon: '🧛' }
         ];
         for (let i = 0; i < 3; i++) {
             const opt = options[Math2.randInt(0, options.length - 1)];
@@ -692,7 +700,7 @@ const game = {
             const grid = document.getElementById('shop-grid');
             grid.innerHTML = '';
             const pool = [
-                { type: 'wep', key: 'pistol', price: 50 }, { type: 'wep', key: 'shotgun', price: 1 },
+                { type: 'wep', key: 'pistol', price: 50 }, { type: 'wep', key: 'shotgun', price: 180 },
                 { type: 'wep', key: 'garlic', price: 80 }, { type: 'wep', key: 'wand', price: 100 },
                 { type: 'wep', key: 'sword', price: 90 }, { type: 'wep', key: 'rocket', price: 150 },
                 { type: 'item', name: "Esteroides", desc: "+15% Daño", stat: 'damage', val: 0.15, price: 40, icon: '💉' },
