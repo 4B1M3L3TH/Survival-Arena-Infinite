@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Survival Arena: Infinite</title>
+    <link rel="shortcut icon" href="Img/IConGame.jpg" type="image/x-icon">
+</head>
+<link rel="stylesheet" href="Styles/style.css">
+<script defer src="Scripts/game.js"></script>
+<body>
+
+<canvas id="gameCanvas"></canvas>
+
+<div id="ui">
+    <div class="hud-top">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+            <div id="diff-badge">NORMAL</div>
+        </div>
+        <div class="bar-wrap">
+            <div id="hp-bar" class="bar-fill hp-fill" style="width: 100%;"></div>
+            <div id="hp-text" class="bar-text">100/100</div>
+        </div>
+        <div class="bar-wrap">
+            <div id="xp-bar" class="bar-fill xp-fill" style="width: 0%;"></div>
+            <div id="xp-text" class="bar-text">LVL 1</div>
+        </div>
+        <div class="counters">
+            <span>💎 <span id="money-display">0</span></span>
+            <span>☠️ <span id="kill-display">0</span></span>
+        </div>
+    </div>
+    <div id="timer-display" class="wave-timer">00:30</div>
+</div>
+
+<!-- LEVEL UP MENU -->
+<div id="levelup-modal" class="modal">
+    <div class="panel">
+        <h1 style="color: var(--xp)">¡NIVEL ALCANZADO!</h1>
+        <p>Elige una mejora de estadísticas</p>
+        <div id="levelup-grid" class="grid"></div>
+    </div>
+</div>
+
+<!-- SHOP MENU -->
+<div id="shop-modal" class="modal">
+    <div class="panel">
+        <h1>TIENDA DE OLEADA <span id="wave-num">1</span></h1>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-weight:bold;">
+            <span>Dinero: 💎<span id="shop-money">0</span></span>
+            <button class="secondary" style="padding: 5px 10px; font-size:12px;" onclick="game.shop.reroll()">Reroll (5 💎)</button>
+        </div>
+        
+        <div id="shop-grid" class="grid"></div>
+        
+        <h2>Tus Estadísticas</h2>
+        <div id="stats-list" style="text-align:left; margin-bottom:15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
+
+        <button onclick="game.nextWave()">SIGUIENTE OLEADA ▶</button>
+    </div>
+</div>
+
+<!-- GAME OVER -->
+<div id="gameover-modal" class="modal">
+    <div class="panel">
+        <h1 style="color: var(--hp)">DERROTADO</h1>
+        <p>Modo: <span id="final-diff" style="font-weight:bold;"></span></p>
+        <p>Oleadas: <span id="final-wave">0</span></p>
+        <button onclick="location.reload()">REINTENTAR</button>
+    </div>
+</div>
+
+<!-- START -->
+<div id="start-modal" class="modal active">
+    <div class="panel">
+        <h1>SURVIVOR ARENA</h1>
+        <p>Infinite Edition</p>
+        
+        <h3>1. SELECCIONA DIFICULTAD</h3>
+        <div class="diff-selector">
+            <button class="diff-btn btn-normal selected" onclick="ui.selectDiff('normal', this)">NORMAL</button>
+            <button class="diff-btn btn-hard" onclick="ui.selectDiff('hard', this)">DIFÍCIL</button>
+            <button class="diff-btn btn-hardcore" onclick="ui.selectDiff('hardcore', this)">HARDCORE</button>
+        </div>
+        <p id="diff-desc" style="font-size: 12px; margin-bottom: 20px; color: #2ecc71;">Stats estándar. Recomendado para empezar.</p>
+
+        <h3>2. ELIGE TU CLASE</h3>
+        <div class="grid" style="grid-template-columns: repeat(2, 1fr);">
+            <div class="card" onclick="startGame('pistol')">
+                <div class="icon">🔫</div>
+                <h3>Soldado</h3>
+                <p>Equilibrado</p>
+            </div>
+            <div class="card" onclick="startGame('melee')">
+                <div class="icon">⚔️</div>
+                <h3>Guerrero</h3>
+                <p>Tanque + Espada</p>
+            </div>
+            <div class="card" onclick="startGame('mage')">
+                <div class="icon">🪄</div>
+                <h3>Mago</h3>
+                <p>Daño + Varita</p>
+            </div>
+            <div class="card" onclick="startGame('heavy')">
+                <div class="icon">🚀</div>
+                <h3>Artillero</h3>
+                <p>Explosivo</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="joystick-zone"></div>
+
+</body>
+</html>
